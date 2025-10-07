@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Resource.hpp"
+#include "Engine/Utility.hpp"
 #include "Game/State.hpp"
 #include "Game/StateIDs.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -10,6 +11,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <cmath>
 #include <cstddef>
 #include <vector>
 
@@ -22,11 +24,17 @@ class MenuState : public State {
 
         sf::Text playOption(context.fonts->get(FontID::Main));
         playOption.setString("Play");
+        centerOrigin(playOption);
         playOption.setPosition(context.window->getView().getSize() / 2.f);
         mMenuOptions.push_back(playOption);
 
         sf::Text exitOption(context.fonts->get(FontID::Main));
         exitOption.setString("Exit");
+        centerOrigin(exitOption);
+        exitOption.setOrigin(
+            {exitOption.getOrigin().x,
+             std::floor(exitOption.getOrigin().y +
+                        exitOption.getLocalBounds().size.y * 2.f)});
         exitOption.setPosition(context.window->getView().getSize() / 2.f);
         mMenuOptions.push_back(exitOption);
 

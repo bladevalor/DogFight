@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Resource.hpp"
+#include "Engine/Utility.hpp"
 #include "Game/State.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
@@ -14,6 +15,7 @@ class TitleState : public State {
           mText(context.fonts->get(FontID::Main)), mShowText(true),
           mTextEffectTime(sf::Time::Zero) {
         mText.setString("Press any key to start");
+        centerOrigin(mText);
         mText.setPosition(context.window->getView().getSize() / 2.f);
     }
 

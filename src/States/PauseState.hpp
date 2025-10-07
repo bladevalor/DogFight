@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/Utility.hpp"
 #include "Game/State.hpp"
 #include "Game/StateIDs.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -13,18 +14,20 @@ class PauseState : public State {
   public:
     PauseState(StateStack &stack, Context context)
         : State(stack, context),
-          mBackgroundSprite(context.textures->get(TextureId::Eagle)),
+          mBackgroundSprite(context.textures->get(TextureId::TitleScreen)),
           mPausedText(context.fonts->get(FontID::Main)),
           mInstructionText(context.fonts->get(FontID::Main)) {
         sf::Vector2f viewDimension = context.window->getView().getSize();
 
         mPausedText.setString("Game Paused");
         mPausedText.setCharacterSize(70);
+        centerOrigin(mPausedText);
         mPausedText.setPosition(
             {05.f * viewDimension.x, 04.f * viewDimension.y});
 
         mInstructionText.setString(
             "(Press Backspace to return to the main menu)");
+        centerOrigin(mInstructionText);
         mInstructionText.setPosition(
             {0.5f * viewDimension.x, 0.6f * viewDimension.y});
     }
@@ -48,6 +51,7 @@ class PauseState : public State {
         if (!event.is<sf::Event::KeyPressed>()) {
             return false;
         }
+
         const auto *key = event.getIf<sf::Event::KeyPressed>();
         if (key->code == sf::Keyboard::Key::Backspace) {
             requestStackClear();
