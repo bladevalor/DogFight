@@ -1,0 +1,10 @@
+build/
+assets/
+.cache/
+
+todo.md
+complete.cpp 
+compile_commands.json
+
+.clang-format 
+
