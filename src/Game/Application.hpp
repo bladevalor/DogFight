@@ -8,6 +8,7 @@
 #include "States/GameState.hpp"
 #include "States/MenuState.hpp"
 #include "States/PauseState.hpp"
+#include "States/SettingsState.hpp"
 #include "States/TitleState.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -38,7 +39,14 @@ class Application {
         mWindow.setKeyRepeatEnabled(false);
 
         mFonts.load(FontID::Main, "assets/Sansation.ttf");
+
         mTextures.load(TextureId::TitleScreen, "assets/TitleScreen.png");
+        mTextures.load(TextureId::ButtonNormal,
+                       "assets/buttons/ButtonNormal.png");
+        mTextures.load(TextureId::ButtonPressed,
+                       "assets/buttons/ButtonPressed.png");
+        mTextures.load(TextureId::ButtonSelected,
+                       "assets/buttons/ButtonSelected.png");
 
         // mStatisticsText.emplace(mFonts.get(FontID::Main));
         mStatisticsText.setPosition({5.f, 5.f});
@@ -125,6 +133,7 @@ class Application {
         mStateStack.registerState<MenuState>(StateID::Menu);
         mStateStack.registerState<GameState>(StateID::Game);
         mStateStack.registerState<PauseState>(StateID::Pause);
+        mStateStack.registerState<SettingsState>(StateID::Setting);
     }
 
   private:

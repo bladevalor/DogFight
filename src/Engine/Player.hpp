@@ -8,8 +8,12 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <map>
+#include <vector>
 
 enum class InputAction { moveLeft, moveRight, moveDown, moveUp };
+static std::vector<InputAction> allInputActions = {
+    InputAction::moveLeft, InputAction::moveRight, InputAction::moveDown,
+    InputAction::moveUp};
 
 struct AircraftMover {
     AircraftMover(float vx, float vy) : velocity({vx, vy}) {};

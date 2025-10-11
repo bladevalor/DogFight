@@ -9,7 +9,16 @@
 #include <string>
 #include <type_traits>
 
-enum class TextureId { Eagle, Raptor, Desert, TitleScreen, None };
+enum class TextureId {
+    Eagle,
+    Raptor,
+    Desert,
+    TitleScreen,
+    ButtonNormal,
+    ButtonPressed,
+    ButtonSelected,
+    None
+};
 enum class FontID { Main };
 
 template <typename Identifier, typename Resource> class ResourceHolder {
