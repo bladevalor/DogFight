@@ -21,7 +21,7 @@
 #include <optional>
 #include <string>
 
-sf::Font static mStatFont("assets/Sansation.ttf");
+sf::Font static mStatFont("assets/Fonts/Sansation.ttf");
 sf::Text static mStatisticsText(mStatFont);
 
 class Application {
@@ -38,7 +38,7 @@ class Application {
           mStatisticsUpdateTime(), mStatisticsNumFrames(0) {
         mWindow.setKeyRepeatEnabled(false);
 
-        mFonts.load(FontID::Main, "assets/Sansation.ttf");
+        mFonts.load(FontID::Main, "assets/Fonts/Sansation.ttf");
 
         mTextures.load(TextureId::TitleScreen, "assets/TitleScreen.png");
         mTextures.load(TextureId::ButtonNormal,

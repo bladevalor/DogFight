@@ -5,6 +5,9 @@
 
 class Entity : public SceneNode {
   public:
+    Entity(int hitpoints);
+
+  public:
     sf::Vector2f getVelocity() const { return mVelocity; }
 
     void setVelocity(double vx, double vy) {
@@ -21,6 +24,13 @@ class Entity : public SceneNode {
         mVelocity.y += vy;
     }
 
+  public:
+    void repair(int hitpoints);
+    void damage(int hitpoints);
+    void destroy();
+    void getHintpoints() const;
+    bool isDestroyed() const;
+
   private:
     void updateCurrent(sf::Time dt) override {
         move(mVelocity * dt.asSeconds());
@@ -28,4 +38,5 @@ class Entity : public SceneNode {
 
   private:
     sf::Vector2f mVelocity;
+    int mHintPoints;
 };
