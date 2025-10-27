@@ -1,3 +1,12 @@
 #pragma once
 
-enum class StateID { None, Title, Menu, Game, Loading, Pause, Setting };
+enum class StateID {
+    None,
+    Title,
+    Menu,
+    Game,
+    Loading,
+    Pause,
+    Setting,
+    GameOver
+};

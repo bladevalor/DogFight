@@ -14,6 +14,7 @@ class TitleState : public State {
           mBackgroundSprite(context.textures->get(TextureId::TitleScreen)),
           mText(context.fonts->get(FontID::Main)), mShowText(true),
           mTextEffectTime(sf::Time::Zero) {
+
         mText.setString("Press any key to start");
         centerOrigin(mText);
         mText.setPosition(context.window->getView().getSize() / 2.f);
@@ -40,7 +41,7 @@ class TitleState : public State {
 
     virtual bool handleEvent(const sf::Event &event) {
         // if any key is pressed continue to next screen
-        if (event.is<sf::Event::KeyPressed>()) {
+        if (event.is<sf::Event::KeyReleased>()) {
             requestStackPop();
             requestStackPush(StateID::Menu);
         }

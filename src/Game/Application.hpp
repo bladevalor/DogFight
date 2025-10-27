@@ -5,6 +5,7 @@
 #include "Game/State.hpp"
 #include "Game/StateIDs.hpp"
 #include "Game/StateStack.hpp"
+#include "States/GameOverState.hpp"
 #include "States/GameState.hpp"
 #include "States/MenuState.hpp"
 #include "States/PauseState.hpp"
@@ -64,6 +65,7 @@ class Application {
     void run() {
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
         while (mWindow.isOpen()) {
             sf::Time dt = clock.restart();
             timeSinceLastUpdate += dt;
@@ -104,10 +106,12 @@ class Application {
 
     void render() {
         mWindow.clear();
+
         mStateStack.draw();
 
         mWindow.setView(mWindow.getDefaultView());
         mWindow.draw(mStatisticsText);
+
         mWindow.display();
     };
 
@@ -134,6 +138,7 @@ class Application {
         mStateStack.registerState<GameState>(StateID::Game);
         mStateStack.registerState<PauseState>(StateID::Pause);
         mStateStack.registerState<SettingsState>(StateID::Setting);
+        mStateStack.registerState<GameOverState>(StateID::GameOver);
     }
 
   private:

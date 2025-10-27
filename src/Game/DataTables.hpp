@@ -17,9 +17,11 @@ std::map<Aircraft_t, AircraftData> initializeAircraftData() {
     data[Aircraft_t::Eagle].speed      = 200.f;
     data[Aircraft_t::Eagle].texture    = TextureId::Eagle;
 
-    data[Aircraft_t::Raptor].hitpoints = 20;
-    data[Aircraft_t::Raptor].speed     = 80.f;
-    data[Aircraft_t::Raptor].texture   = TextureId::Raptor;
+struct PickupData {
+    TextureId texture;
+    std::function<void(Aircraft &)> action;
+};
 
-    return data;
-}
+std::map<Aircraft_t, AircraftData> initializeAircraftData();
+std::map<Projectile_t, ProjectileData> initializeProjectileData();
+std::map<Pickup_t, PickupData> initializePickupData();
