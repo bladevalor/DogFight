@@ -3,16 +3,14 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include <cmath>
+#include <SFML/System/Vector2.hpp>
 
-void centerOrigin(sf::Text &text) {
-    sf::FloatRect bounds = text.getLocalBounds();
-    text.setOrigin({std::floor(bounds.position.x + bounds.size.x / 2.f),
-                    std::floor(bounds.position.y + bounds.size.y / 2.f)});
-}
+void centerOrigin(sf::Text &text);
 
-void centeOrigin(sf::Sprite &sprite) {
-    sf::FloatRect bounds = sprite.getLocalBounds();
-    sprite.setOrigin({std::floor(bounds.position.x + bounds.size.x / 2.f),
-                      std::floor(bounds.position.y + bounds.size.y / 2.f)});
-}
+void centerOrigin(sf::Sprite &sprite);
+
+float length(sf::Vector2f vector);
+
+sf::Vector2f unitVector(sf::Vector2f vector);
+
+int randomInt(int inclusiveMax);

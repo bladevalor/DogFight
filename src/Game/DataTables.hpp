@@ -16,6 +16,11 @@ std::map<Aircraft_t, AircraftData> initializeAircraftData() {
     data[Aircraft_t::Eagle].hitpoints  = 100;
     data[Aircraft_t::Eagle].speed      = 200.f;
     data[Aircraft_t::Eagle].texture    = TextureId::Eagle;
+struct ProjectileData {
+    int damage;
+    float speed;
+    TextureId texture;
+};
 
 struct PickupData {
     TextureId texture;
