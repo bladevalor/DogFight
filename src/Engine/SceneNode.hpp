@@ -1,99 +1,68 @@
 #pragma once
 
 #include "Command.hpp"
+#include "Engine/CommandQueue.hpp"
 #include "category.hpp"
+
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System.hpp>
 #include <SFML/System/Time.hpp>
-#include <algorithm>
+#include <SFML/System/Vector2.hpp>
+#include <set>
+#include <utility>
 
 class SceneNode : public sf::Transformable, public sf::Drawable {
   public:
     typedef std::unique_ptr<SceneNode> SceneNodePointer;
+    typedef std::pair<SceneNode *, SceneNode *> CollisionPair;
 
   public:
-    SceneNode() : mChildren(), mParent(nullptr) {};
+    explicit SceneNode(GameObjectCategory category = GameObjectCategory::None);
     SceneNode(const SceneNode &) = delete; // disable copy constructor
     SceneNode &operator=(const SceneNode &) = delete; // disable copy assignment
 
-    void addChild(SceneNodePointer child) {
-        child->mParent = this;
-        mChildren.push_back(std::move(child));
-    }
+    void addChild(SceneNodePointer child);
+    SceneNodePointer removeChild(const SceneNode &node);
 
-    SceneNodePointer removeChild(const SceneNode &node) {
-        auto found = std::find_if(
-            mChildren.begin(), mChildren.end(),
-            [&](SceneNodePointer &p) -> bool { return p.get() == &node; });
+    void update(sf::Time dt, CommandQueue &commands);
 
-        assert(found != mChildren.end());
+    sf::Transform getWorldTransform() const;
+    sf::Vector2f getWorldPosition() const;
 
-        SceneNodePointer result = std::move(*found);
-        result->mParent         = nullptr;
-        mChildren.erase(found);
-        return result;
-    }
-    void update(sf::Time dt) {
-        updateCurrent(dt);
-        updateChild(dt);
-    };
+    virtual GameObjectCategory getCategory() const;
+    void onCommand(Command command, sf::Time dt);
 
-    sf::Transform getWorldTransform() const {
-        sf::Transform transform = sf::Transform::Identity;
-        for (const SceneNode *node = this; node != nullptr;
-             node                  = node->mParent) {
-            transform = node->getTransform() * transform;
-        }
-        return transform;
-    }
+    void checkNodeCollision(SceneNode &node,
+                            std::set<CollisionPair> &collisionMatches);
+    void checkSceneCollision(SceneNode &sceneGraph,
+                             std::set<CollisionPair> &collisionMatches);
 
-    sf::Vector2f getWorldPosition() const {
-        return getWorldTransform() * this->getPosition();
-    }
-
-    virtual GameObjectCategory getCategory() const {
-        return GameObjectCategory::Scene;
-    }
-
-    void onCommand(Command command, sf::Time dt) {
-        if (command.category == getCategory()) {
-            command.action(*this, dt);
-        }
-
-        for (SceneNodePointer &child : mChildren) {
-            child->onCommand(command, dt);
-        }
-    }
+    virtual bool isDestroyed() const;
+    virtual bool isMarkedForRemoval() const;
+    void removeWrecks();
+    sf::FloatRect getBoundingBox() const;
 
   private:
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const {
-        states.transform *= getTransform();
-
-        drawCurrent(target, states);
-        drawChildren(target, states);
-    };
-
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     virtual void drawCurrent(sf::RenderTarget &target,
-                             sf::RenderStates states) const {
-        // Do nothing
-    };
+                             sf::RenderStates states) const;
+    void drawChildren(sf::RenderTarget &target, sf::RenderStates states) const;
+    void drawBoundingBox(sf::RenderTarget &target,
+                         sf::RenderStates state) const;
 
-    void drawChildren(sf::RenderTarget &target, sf::RenderStates states) const {
-        for (const SceneNodePointer &child : mChildren) {
-            child->draw(target, states);
-        }
-    }
-
-    virtual void updateCurrent(sf::Time dt) {
-        // Do nothing
-    };
-    void updateChild(sf::Time dt) {
-        for (const SceneNodePointer &child : mChildren) {
-            child->update(dt);
-        }
-    };
+    virtual void updateCurrent(sf::Time dt, CommandQueue &commands);
+    void updateChild(sf::Time dt, CommandQueue &commands);
 
   private:
     std::vector<SceneNodePointer> mChildren;
     SceneNode *mParent;
+    GameObjectCategory mDefaultCategory;
 };
+
+float distance(const SceneNode &lhs, const SceneNode &rhs);
+bool collision(SceneNode &lhs, SceneNode &rhs);

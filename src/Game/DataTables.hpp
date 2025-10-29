@@ -1,21 +1,29 @@
 #pragma once
 
+#include "Engine/Pickup.hpp"
+#include "Engine/Projectile.hpp"
 #include "Engine/Resource.hpp"
 #include "Game/Aircraft.hpp"
+#include <SFML/System/Time.hpp>
+#include <functional>
 #include <map>
+#include <vector>
+
+struct Direction {
+    Direction(float angle, float distance) : angle(angle), distance(distance) {}
+
+    float angle;
+    float distance;
+};
 
 struct AircraftData {
     int hitpoints;
     float speed;
     TextureId texture;
+    sf::Time reloadingTime;
+    std::vector<Direction> directions;
 };
 
-std::map<Aircraft_t, AircraftData> initializeAircraftData() {
-    std::map<Aircraft_t, AircraftData> data;
-
-    data[Aircraft_t::Eagle].hitpoints  = 100;
-    data[Aircraft_t::Eagle].speed      = 200.f;
-    data[Aircraft_t::Eagle].texture    = TextureId::Eagle;
 struct ProjectileData {
     int damage;
     float speed;
