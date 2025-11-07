@@ -95,14 +95,15 @@ class Player {
 
   private:
     void initializeActions() {
+        float playerSpeed = 200.f;
         mActionBinding[InputAction::moveLeft].action =
-            derivedAction<Aircraft>(AircraftMover(-1, 0.f));
+            derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
         mActionBinding[InputAction::moveRight].action =
-            derivedAction<Aircraft>(AircraftMover(1, 0.f));
+            derivedAction<Aircraft>(AircraftMover(playerSpeed, 0.f));
         mActionBinding[InputAction::moveDown].action =
-            derivedAction<Aircraft>(AircraftMover(0.f, 1));
+            derivedAction<Aircraft>(AircraftMover(0.f, playerSpeed));
         mActionBinding[InputAction::moveUp].action =
-            derivedAction<Aircraft>(AircraftMover(0.f, -1));
+            derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
         mActionBinding[InputAction::Fire].action =
             derivedAction<Aircraft>([](Aircraft &a, sf::Time) { a.fire(); });
         mActionBinding[InputAction::LaunchMissile].action =

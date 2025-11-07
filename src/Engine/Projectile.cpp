@@ -18,7 +18,7 @@ std::map<Projectile_t, ProjectileData> ProjectileDataTable =
     initializeProjectileData();
 
 Projectile::Projectile(Projectile_t type, const TextureHolder &textures)
-    : Entity(1), mProjectileType(type),
+    : Entity(1), mProjectileType(type), mTargetDirection(),
       mProjectileSprite(textures.get(ProjectileDataTable[type].texture)) {
     centerOrigin(mProjectileSprite);
 }
@@ -43,7 +43,7 @@ void Projectile::updateCurrent(sf::Time dt, CommandQueue &commands) {
         float projectile_angle =
             std::atan2(projectile_velocity.y, projectile_velocity.x);
 
-        setRotation(sf::degrees(projectile_angle + 90.f));
+        setRotation(sf::radians(projectile_angle) + sf::degrees(90.f));
         setVelocity(projectile_velocity);
     }
 
@@ -76,5 +76,6 @@ GameObjectCategory Projectile::getCategory() const {
 }
 
 sf::FloatRect Projectile::getBoundingBox() const {
-    return getTransform().transformRect(mProjectileSprite.getGlobalBounds());
+    return getWorldTransform().transformRect(
+        mProjectileSprite.getGlobalBounds());
 }

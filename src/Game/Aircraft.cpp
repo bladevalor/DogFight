@@ -60,6 +60,8 @@ Aircraft::Aircraft(Aircraft_t type, const TextureHolder &textures,
         mMissileDisplay = missileDisplay.get();
         addChild(std::move(missileDisplay));
     }
+
+    updateTexts();
 };
 
 void Aircraft::drawCurrent(sf::RenderTarget &target,
@@ -183,7 +185,7 @@ void Aircraft::createProjectile(SceneNode &node, Projectile_t proj_type,
 
     float sign = isAllied() ? -1.f : 1.f;
 
-    projectile->setPosition(getWorldPosition() + offset * sign);
+    projectile->setPosition(getWorldPosition() + offset /** sign*/);
     projectile->setVelocity(velocity * sign);
 
     node.addChild(std::move(projectile));

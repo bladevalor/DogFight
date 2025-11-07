@@ -26,7 +26,6 @@ add_executable(pocket
 
 target_include_directories(pocket PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
-target_compile_features(pocket PRIVATE cxx_std_11)
 target_link_libraries(pocket PRIVATE SFML::Graphics)
 target_link_libraries(pocket PRIVATE SFML::Window)
 target_link_libraries(pocket PRIVATE SFML::System)

@@ -32,7 +32,8 @@ World::World(sf::RenderWindow &window, FontHolder &fonts)
                    }),
       mSpawnPosition(window.getSize().x * 0.5f,
                      mWorldBounds.size.y - mWorldView.getSize().y * 0.5f),
-      mScrollSpeed(-50.f), mPlayerAircraft(nullptr) {
+      mTextures(), mWorldSceneGraph(), mWorldSceneLayers(), mEnemySpawnPoints(),
+      mActiveEnemies(), mScrollSpeed(-50.f), mPlayerAircraft(nullptr) {
     loadTextures();
     buildScene();
 

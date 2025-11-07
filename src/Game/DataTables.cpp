@@ -20,11 +20,12 @@ std::map<Aircraft_t, AircraftData> initializeAircraftData() {
     data[Aircraft_t::Raptor].directions.push_back(Direction(45, 80));
     data[Aircraft_t::Raptor].directions.push_back(Direction(-45, 160));
     data[Aircraft_t::Raptor].directions.push_back(Direction(45, 80));
-    data[Aircraft_t::Raptor].reloadingTime = sf::Time::Zero;
+    data[Aircraft_t::Raptor].reloadingTime =
+        sf::milliseconds(500); // sf::Time::Zero;
 
-    data[Aircraft_t::Avenger].hitpoints    = 40;
-    data[Aircraft_t::Avenger].speed        = 50.f;
-    data[Aircraft_t::Avenger].texture      = TextureId::Avenger;
+    data[Aircraft_t::Avenger].hitpoints = 40;
+    data[Aircraft_t::Avenger].speed     = 50.f;
+    data[Aircraft_t::Avenger].texture   = TextureId::Avenger;
     data[Aircraft_t::Avenger].directions.push_back(Direction(45, 50));
     data[Aircraft_t::Avenger].directions.push_back(Direction(0, 50));
     data[Aircraft_t::Avenger].directions.push_back(Direction(-45, 100));

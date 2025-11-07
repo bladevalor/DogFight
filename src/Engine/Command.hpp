@@ -9,8 +9,8 @@ class SceneNode;
 
 struct Command {
     Command() : action(), category(GameObjectCategory::None) {};
+
     std::function<void(SceneNode &, sf::Time)> action;
-    // unsigned int category;
     GameObjectCategory category;
 };
 
