@@ -49,7 +49,7 @@ sf::Transform SceneNode::getWorldTransform() const {
 }
 
 sf::Vector2f SceneNode::getWorldPosition() const {
-    return getWorldTransform() * this->getPosition();
+    return getWorldTransform().transformPoint(sf::Vector2f());
 }
 
 GameObjectCategory SceneNode::getCategory() const { return mDefaultCategory; }
