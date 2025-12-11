@@ -45,7 +45,7 @@ class SceneNode : public sf::Transformable, public sf::Drawable {
     virtual bool isDestroyed() const;
     virtual bool isMarkedForRemoval() const;
     void removeWrecks();
-    sf::FloatRect getBoundingBox() const;
+    virtual sf::FloatRect getBoundingBox() const;
 
   private:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
