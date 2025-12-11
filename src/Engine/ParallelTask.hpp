@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include <chrono>
 #include <mutex>
 #include <thread>
 
@@ -29,9 +30,16 @@ class ParallelTask {
         // dummy task taking 10 seconds long
         bool ended = false;
         while (!ended) {
-            std::lock_guard<std::mutex> lock(mMutex);
-            if (mElapsedTime.getElapsedTime().asSeconds() >= 10.f) {
-                ended = true;
+            {
+                std::lock_guard<std::mutex> lock(mMutex);
+                if (mElapsedTime.getElapsedTime().asSeconds() >= 10.f) {
+                    ended = true;
+                }
+            }
+
+            if (!ended) {
+                // sleep for 10 milliseconds to let the CPU rest
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         }
         {

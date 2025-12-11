@@ -21,8 +21,6 @@ class CommandQueue {
 
     bool isEmpty() const { return mQueue.empty(); }
 
-    std::queue<Command> &getQueue() { return mQueue; }
-
   private:
     std::queue<Command> mQueue;
 };

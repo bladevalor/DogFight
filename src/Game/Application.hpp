@@ -5,6 +5,7 @@
 #include "Game/State.hpp"
 #include "Game/StateIDs.hpp"
 #include "Game/StateStack.hpp"
+#include "States/GameOverState.hpp"
 #include "States/GameState.hpp"
 #include "States/MenuState.hpp"
 #include "States/PauseState.hpp"
@@ -21,7 +22,7 @@
 #include <optional>
 #include <string>
 
-sf::Font static mStatFont("assets/Sansation.ttf");
+sf::Font static mStatFont("assets/Fonts/Sansation.ttf");
 sf::Text static mStatisticsText(mStatFont);
 
 class Application {
@@ -37,8 +38,9 @@ class Application {
           mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)),
           mStatisticsUpdateTime(), mStatisticsNumFrames(0) {
         mWindow.setKeyRepeatEnabled(false);
+        mWindow.setVerticalSyncEnabled(true);
 
-        mFonts.load(FontID::Main, "assets/Sansation.ttf");
+        mFonts.load(FontID::Main, "assets/Fonts/Sansation.ttf");
 
         mTextures.load(TextureId::TitleScreen, "assets/TitleScreen.png");
         mTextures.load(TextureId::ButtonNormal,
@@ -64,6 +66,7 @@ class Application {
     void run() {
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
         while (mWindow.isOpen()) {
             sf::Time dt = clock.restart();
             timeSinceLastUpdate += dt;
@@ -104,10 +107,12 @@ class Application {
 
     void render() {
         mWindow.clear();
+
         mStateStack.draw();
 
         mWindow.setView(mWindow.getDefaultView());
         mWindow.draw(mStatisticsText);
+
         mWindow.display();
     };
 
@@ -134,6 +139,7 @@ class Application {
         mStateStack.registerState<GameState>(StateID::Game);
         mStateStack.registerState<PauseState>(StateID::Pause);
         mStateStack.registerState<SettingsState>(StateID::Setting);
+        mStateStack.registerState<GameOverState>(StateID::GameOver);
     }
 
   private:

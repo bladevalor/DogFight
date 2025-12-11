@@ -7,13 +7,25 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <algorithm>
+#include <cassert>
+#include <functional>
 #include <map>
 #include <vector>
 
-enum class InputAction { moveLeft, moveRight, moveDown, moveUp };
+enum class MissionStatus { MissionRunning, MissionSuccess, MissionFailure };
+
+enum class InputAction {
+    moveLeft,
+    moveRight,
+    moveDown,
+    moveUp,
+    Fire,
+    LaunchMissile
+};
 static std::vector<InputAction> allInputActions = {
     InputAction::moveLeft, InputAction::moveRight, InputAction::moveDown,
-    InputAction::moveUp};
+    InputAction::moveUp,   InputAction::Fire,      InputAction::LaunchMissile};
 
 struct AircraftMover {
     AircraftMover(float vx, float vy) : velocity({vx, vy}) {};
@@ -26,11 +38,13 @@ struct AircraftMover {
 
 class Player {
   public:
-    Player() {
+    Player() : mCurrentMissionStatus(MissionStatus::MissionRunning) {
         mKeyBinding[sf::Keyboard::Key::Left]  = InputAction::moveLeft;
         mKeyBinding[sf::Keyboard::Key::Right] = InputAction::moveRight;
         mKeyBinding[sf::Keyboard::Key::Down]  = InputAction::moveDown;
         mKeyBinding[sf::Keyboard::Key::Up]    = InputAction::moveUp;
+        mKeyBinding[sf::Keyboard::Key::Space] = InputAction::Fire;
+        mKeyBinding[sf::Keyboard::Key::M]     = InputAction::LaunchMissile;
 
         initializeActions();
 
@@ -41,7 +55,7 @@ class Player {
 
     void handleEvent(sf::Keyboard::Key key, CommandQueue &commands) {
         auto found = mKeyBinding.find(key);
-        if (found != mKeyBinding.end() && isLiveAction(found->second)) {
+        if (found != mKeyBinding.end() && !isLiveAction(found->second)) {
             commands.push(mActionBinding[found->second]);
         }
     }
@@ -56,22 +70,32 @@ class Player {
     };
 
     void assignKey(InputAction action, sf::Keyboard::Key key) {
+        // delete all keys mapped to the current "action"
+        std::erase_if(mKeyBinding,
+                      [&](const auto &pair) { return pair.second == action; });
+
+        // insert new KeyBinding
         mKeyBinding[key] = action;
     }
 
     sf::Keyboard::Key getAssignedKey(InputAction action) {
-        for (auto &pair : mKeyBinding) {
-            if (pair.second == action) {
-                return pair.first;
-            }
-        }
-        return sf::Keyboard::Key::Unknown;
+        auto found = std::ranges::find_if(mKeyBinding, [&](const auto &pair) {
+            return pair.second == action;
+        });
+        assert(found != mKeyBinding.end());
+
+        return found->first;
+    }
+
+    MissionStatus getMissionStatus() const { return mCurrentMissionStatus; }
+
+    void setMissionStatus(MissionStatus status) {
+        mCurrentMissionStatus = status;
     }
 
   private:
     void initializeActions() {
         float playerSpeed = 200.f;
-
         mActionBinding[InputAction::moveLeft].action =
             derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
         mActionBinding[InputAction::moveRight].action =
@@ -80,6 +104,11 @@ class Player {
             derivedAction<Aircraft>(AircraftMover(0.f, playerSpeed));
         mActionBinding[InputAction::moveUp].action =
             derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
+        mActionBinding[InputAction::Fire].action =
+            derivedAction<Aircraft>([](Aircraft &a, sf::Time) { a.fire(); });
+        mActionBinding[InputAction::LaunchMissile].action =
+            derivedAction<Aircraft>(
+                [](Aircraft &a, sf::Time) { a.launchMissile(); });
     }
 
     bool isLiveAction(InputAction action) {
@@ -88,6 +117,7 @@ class Player {
         case InputAction::moveRight:
         case InputAction::moveDown:
         case InputAction::moveUp:
+        case InputAction::Fire:
             return true;
         default:
             return false;
@@ -97,4 +127,5 @@ class Player {
   private:
     std::map<sf::Keyboard::Key, InputAction> mKeyBinding;
     std::map<InputAction, Command> mActionBinding;
+    MissionStatus mCurrentMissionStatus;
 };

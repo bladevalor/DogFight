@@ -12,14 +12,20 @@ find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
 
 add_executable(pocket
     src/main.cpp
+
+    src/Engine/Pickup.cpp
+    src/Engine/Projectile.cpp
+    src/Engine/Utility.cpp
+    src/Engine/World.cpp
+    src/Engine/SceneNode.cpp
+    src/Game/Aircraft.cpp
+    src/Game/DataTables.cpp
     src/Game/State.cpp
     src/Game/StateStack.cpp
-    src/Game/Aircraft.cpp
 )
 
 target_include_directories(pocket PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
-target_compile_features(pocket PRIVATE cxx_std_11)
 target_link_libraries(pocket PRIVATE SFML::Graphics)
 target_link_libraries(pocket PRIVATE SFML::Window)
 target_link_libraries(pocket PRIVATE SFML::System)

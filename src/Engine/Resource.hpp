@@ -13,11 +13,17 @@ enum class TextureId {
     Eagle,
     Raptor,
     Desert,
+    Avenger,
+    Bullet,
+    Missile,
+    HealthBoost,
+    MissilePickup,
+    FireSpread,
+    FireRate,
     TitleScreen,
     ButtonNormal,
     ButtonPressed,
     ButtonSelected,
-    None
 };
 enum class FontID { Main };
 
