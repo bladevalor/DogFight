@@ -106,7 +106,7 @@ sf::FloatRect SceneNode::getBoundingBox() const {
 }
 
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.transform *= getTransform();
+    states.transform.combine(getWorldTransform());
 
     drawCurrent(target, states);
     drawChildren(target, states);
@@ -138,7 +138,7 @@ void SceneNode::updateChild(sf::Time dt, CommandQueue &commands) {
 };
 
 void SceneNode::drawBoundingBox(sf::RenderTarget &target,
-                                sf::RenderStates state) const {
+                                sf::RenderStates states) const {
     sf::FloatRect rect = getBoundingBox();
     sf::RectangleShape shape;
 
