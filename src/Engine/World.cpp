@@ -4,6 +4,7 @@
 #include "Engine/category.hpp"
 #include "Game/Aircraft.hpp"
 #include <SFML/Graphics/Rect.hpp>
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <memory>
@@ -40,11 +41,19 @@ World::World(sf::RenderWindow &window, FontHolder &fonts)
     mWorldView.setCenter(mSpawnPosition);
 }
 
+// FIX: Collisions are not working at all
 void World::handleCollisions() {
     std::set<SceneNode::CollisionPair> collisionMatches;
     mWorldSceneGraph.checkSceneCollision(mWorldSceneGraph, collisionMatches);
 
     for (auto pair : collisionMatches) {
+        // INFO: SAFEGUARD for "stale" objects that have not yet been removed
+        // from the scene
+        if (pair.first->isMarkedForRemoval() ||
+            pair.second->isMarkedForRemoval()) {
+            continue;
+        }
+
         if (matchesCategories(pair, GameObjectCategory::PlayerAircraft,
                               GameObjectCategory::EnemyAircraft)) {
             auto &player = static_cast<Aircraft &>(*pair.first);
@@ -141,8 +150,8 @@ void World::spawnEnemies() {
 
         std::unique_ptr<Aircraft> enemy =
             std::make_unique<Aircraft>(spawn.type, mTextures, mFonts);
-        enemy->setPosition({spawn.position.x, spawn.position.y});
-        enemy->setRotation(sf::degrees(180.f));
+        enemy->setPosition(spawn.position);
+        enemy->setRotation(sf::degrees(180));
 
         mWorldSceneLayers[(size_t)Layer::Air]->addChild(std::move(enemy));
 
@@ -262,6 +271,13 @@ void World::destroyEntitiesOutsideView() {
         }
     });
 
+#define both
+#ifdef both
+    /*
+     * INFO:  good perfomance which means the objects dont stay in the scen
+     * HACK: aircraft are destroyed before they reach the battlefield hence the
+     * presence of "PICKUPs"
+     * */
     Command destroyProjectile, destroyEnemyAircraft;
 
     destroyProjectile.category    = GameObjectCategory::Projectile;
@@ -272,6 +288,18 @@ void World::destroyEntitiesOutsideView() {
 
     mGlobalCommandQueue.push(destroyProjectile);
     mGlobalCommandQueue.push(destroyEnemyAircraft);
+#elif bits
+    /*
+     * HACK: aircraft persist till the battlefield
+     * FIX: perfomance is bad so the aircraft arent being destroyed
+     * */
+    Command chad;
+    chad.category =
+        (GameObjectCategory)((int)GameObjectCategory::Projectile |
+                             (int)GameObjectCategory::EnemyAircraft);
+    chad.action = action;
+    mGlobalCommandQueue.push(chad);
+#endif
 }
 
 void World::loadTextures() {
