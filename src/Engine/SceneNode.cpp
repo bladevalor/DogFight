@@ -1,5 +1,7 @@
 #include "Engine/SceneNode.hpp"
 #include "Engine/Utility.hpp"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
 
 float distance(const SceneNode &lhs, const SceneNode &rhs) {
     return length(lhs.getWorldPosition() - rhs.getWorldPosition());
@@ -138,10 +140,10 @@ void SceneNode::drawBoundingBox(sf::RenderTarget &target,
     sf::FloatRect rect = getBoundingBox();
     sf::RectangleShape shape;
 
-    shape.setPosition({rect.position.x, rect.position.y});
-    shape.setSize({rect.size.x, rect.size.y});
+    shape.setPosition(rect.position);
+    shape.setSize(rect.size);
     shape.setFillColor(sf::Color::Transparent);
-    shape.setOutlineThickness(1.f);
+    shape.setOutlineThickness(2);
     shape.setOutlineColor(sf::Color::Red);
 
     target.draw(shape);

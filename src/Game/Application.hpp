@@ -38,6 +38,7 @@ class Application {
           mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)),
           mStatisticsUpdateTime(), mStatisticsNumFrames(0) {
         mWindow.setKeyRepeatEnabled(false);
+        mWindow.setVerticalSyncEnabled(true);
 
         mFonts.load(FontID::Main, "assets/Fonts/Sansation.ttf");
 

@@ -114,19 +114,18 @@ void World::guideMissiles() {
 }
 
 void World::addEnemies() {
-    addEnemy(Aircraft_t::Raptor, 0.f, 500.f);
-    addEnemy(Aircraft_t::Raptor, 0.f, 1000.f);
-    addEnemy(Aircraft_t::Raptor, +100.f, 1100.f);
-    addEnemy(Aircraft_t::Raptor, -100.f, 1100.f);
-    addEnemy(Aircraft_t::Avenger, -70.f, 1400.f);
-    addEnemy(Aircraft_t::Avenger, -70.f, 1600.f);
-    addEnemy(Aircraft_t::Avenger, 70.f, 1400.f);
-    addEnemy(Aircraft_t::Avenger, 70.f, 1600.f);
+    addEnemy(Aircraft_t::Raptor, 0, 500);
+    addEnemy(Aircraft_t::Raptor, 0, 1000);
+    addEnemy(Aircraft_t::Raptor, +100, 1100);
+    addEnemy(Aircraft_t::Raptor, -100, 1100);
+    addEnemy(Aircraft_t::Avenger, -70, 1400);
+    addEnemy(Aircraft_t::Avenger, -70, 1600);
+    addEnemy(Aircraft_t::Avenger, 70, 1400);
+    addEnemy(Aircraft_t::Avenger, 70, 1600);
 
-    std::sort(mEnemySpawnPoints.begin(), mEnemySpawnPoints.end(),
-              [](SpawnPoint lhs, SpawnPoint rhs) {
-                  return lhs.position.y < rhs.position.y;
-              });
+    std::ranges::sort(mEnemySpawnPoints, [](SpawnPoint lhs, SpawnPoint rhs) {
+        return lhs.position.y < rhs.position.y;
+    });
 }
 
 void World::addEnemy(Aircraft_t type, float x, float y) {
@@ -221,7 +220,7 @@ void World::update(sf::Time dt) {
     mWorldView.move({0.f, mScrollSpeed * dt.asSeconds()});
     mPlayerAircraft->setVelocity({0.f, 0.f});
 
-    // destroyEntitiesOutsideView();
+    destroyEntitiesOutsideView();
     guideMissiles();
 
     // forward commands to the Scene Graph

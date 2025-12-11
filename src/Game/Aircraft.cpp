@@ -127,8 +127,8 @@ void Aircraft::updateMovementPattern(sf::Time dt) {
 
         sf::Angle radians =
             sf::radians(directions[mDirectionIndex].angle) + sf::degrees(90.f);
-        float vx = getMaxSpeed() + std::cos(radians.asRadians());
-        float vy = getMaxSpeed() + std::sin(radians.asRadians());
+        float vx = getMaxSpeed() * std::cos(radians.asRadians());
+        float vy = getMaxSpeed() * std::sin(radians.asRadians());
         setVelocity({vx, vy});
         mTravelledDistance += getMaxSpeed() * dt.asSeconds();
     }
