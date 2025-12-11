@@ -101,7 +101,9 @@ void SceneNode::removeWrecks() {
     }
 }
 
-sf::FloatRect SceneNode::getBoundingBox() const { return sf::FloatRect(); }
+sf::FloatRect SceneNode::getBoundingBox() const {
+    return getWorldTransform().transformRect(sf::FloatRect());
+}
 
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     states.transform *= getTransform();
