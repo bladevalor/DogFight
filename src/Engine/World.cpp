@@ -41,7 +41,6 @@ World::World(sf::RenderWindow &window, FontHolder &fonts)
     mWorldView.setCenter(mSpawnPosition);
 }
 
-// FIX: Collisions are not working at all
 void World::handleCollisions() {
     std::set<SceneNode::CollisionPair> collisionMatches;
     mWorldSceneGraph.checkSceneCollision(mWorldSceneGraph, collisionMatches);
@@ -271,13 +270,6 @@ void World::destroyEntitiesOutsideView() {
         }
     });
 
-#define both
-#ifdef both
-    /*
-     * INFO:  good perfomance which means the objects dont stay in the scen
-     * HACK: aircraft are destroyed before they reach the battlefield hence the
-     * presence of "PICKUPs"
-     * */
     Command destroyProjectile, destroyEnemyAircraft;
 
     destroyProjectile.category    = GameObjectCategory::Projectile;
@@ -288,18 +280,6 @@ void World::destroyEntitiesOutsideView() {
 
     mGlobalCommandQueue.push(destroyProjectile);
     mGlobalCommandQueue.push(destroyEnemyAircraft);
-#elif bits
-    /*
-     * HACK: aircraft persist till the battlefield
-     * FIX: perfomance is bad so the aircraft arent being destroyed
-     * */
-    Command chad;
-    chad.category =
-        (GameObjectCategory)((int)GameObjectCategory::Projectile |
-                             (int)GameObjectCategory::EnemyAircraft);
-    chad.action = action;
-    mGlobalCommandQueue.push(chad);
-#endif
 }
 
 void World::loadTextures() {
