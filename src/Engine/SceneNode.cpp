@@ -112,7 +112,7 @@ void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     drawChildren(target, states);
 
     // show boundingBox
-    drawBoundingBox(target, states);
+    // drawBoundingBox(target, states);
 };
 
 void SceneNode::drawCurrent(sf::RenderTarget &target,
@@ -145,7 +145,7 @@ void SceneNode::drawBoundingBox(sf::RenderTarget &target,
     shape.setPosition(rect.position);
     shape.setSize(rect.size);
     shape.setFillColor(sf::Color::Transparent);
-    shape.setOutlineThickness(2);
+    shape.setOutlineThickness(1);
     shape.setOutlineColor(sf::Color::Red);
 
     target.draw(shape);
