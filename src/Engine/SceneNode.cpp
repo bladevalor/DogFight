@@ -106,7 +106,7 @@ sf::FloatRect SceneNode::getBoundingBox() const {
 }
 
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.transform.combine(getWorldTransform());
+    states.transform.combine(getTransform());
 
     drawCurrent(target, states);
     drawChildren(target, states);
