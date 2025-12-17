@@ -55,7 +55,7 @@ sf::Vector2f SceneNode::getWorldPosition() const {
 GameObjectCategory SceneNode::getCategory() const { return mDefaultCategory; }
 
 void SceneNode::onCommand(Command command, sf::Time dt) {
-    if (command.category == getCategory()) {
+    if ((int)(command.category & getCategory()) != 0) {
         command.action(*this, dt);
     }
 

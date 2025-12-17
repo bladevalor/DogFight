@@ -9,6 +9,19 @@ enum class GameObjectCategory {
     Pickup           = 1 << 4,
     AlliedProjectile = 1 << 5,
     EnemyProjectile  = 1 << 6,
-
-    Projectile       = AlliedProjectile | EnemyProjectile,
 };
+
+constexpr GameObjectCategory operator&(GameObjectCategory lhs,
+                                       GameObjectCategory rhs) {
+    return (GameObjectCategory)((int)lhs & (int)rhs);
+}
+
+constexpr GameObjectCategory operator|(GameObjectCategory lhs,
+                                       GameObjectCategory rhs) {
+    return (GameObjectCategory)((int)lhs | (int)rhs);
+}
+
+namespace CompositeGameObject {
+inline GameObjectCategory Projectile =
+    GameObjectCategory::AlliedProjectile | GameObjectCategory::EnemyProjectile;
+}
