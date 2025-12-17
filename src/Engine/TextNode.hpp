@@ -19,7 +19,7 @@ class TextNode : public SceneNode {
 
   private:
     virtual void drawCurrent(sf::RenderTarget &target,
-                             sf::RenderStates states) {
+                             sf::RenderStates states) const override {
         target.draw(mText, states);
     }
 

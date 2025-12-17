@@ -55,7 +55,7 @@ sf::Vector2f SceneNode::getWorldPosition() const {
 GameObjectCategory SceneNode::getCategory() const { return mDefaultCategory; }
 
 void SceneNode::onCommand(Command command, sf::Time dt) {
-    if (command.category == getCategory()) {
+    if ((int)(command.category & getCategory()) != 0) {
         command.action(*this, dt);
     }
 
@@ -106,13 +106,13 @@ sf::FloatRect SceneNode::getBoundingBox() const {
 }
 
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.transform.combine(getWorldTransform());
+    states.transform.combine(getTransform());
 
     drawCurrent(target, states);
     drawChildren(target, states);
 
     // show boundingBox
-    drawBoundingBox(target, states);
+    // drawBoundingBox(target, states);
 };
 
 void SceneNode::drawCurrent(sf::RenderTarget &target,
@@ -145,7 +145,7 @@ void SceneNode::drawBoundingBox(sf::RenderTarget &target,
     shape.setPosition(rect.position);
     shape.setSize(rect.size);
     shape.setFillColor(sf::Color::Transparent);
-    shape.setOutlineThickness(2);
+    shape.setOutlineThickness(1);
     shape.setOutlineColor(sf::Color::Red);
 
     target.draw(shape);

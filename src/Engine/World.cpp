@@ -46,7 +46,7 @@ void World::handleCollisions() {
     mWorldSceneGraph.checkSceneCollision(mWorldSceneGraph, collisionMatches);
 
     for (auto pair : collisionMatches) {
-        // INFO: SAFEGUARD for "stale" objects that have not yet been removed
+        // INFO: SAFEGUARD from "stale" objects that have not yet been removed
         // from the scene
         if (pair.first->isMarkedForRemoval() ||
             pair.second->isMarkedForRemoval()) {
@@ -261,8 +261,12 @@ sf::FloatRect World::getBattlefieldBounds() const {
 }
 
 void World::destroyEntitiesOutsideView() {
+    Command killObject;
 
-    auto action = derivedAction<Entity>([this](Entity &e, sf::Time) {
+    killObject.category =
+        GameObjectCategory::EnemyAircraft | CompositeGameObject::Projectile;
+
+    killObject.action = derivedAction<Entity>([this](Entity &e, sf::Time) {
         if (!getBattlefieldBounds()
                  .findIntersection(e.getBoundingBox())
                  .has_value()) {
@@ -270,16 +274,7 @@ void World::destroyEntitiesOutsideView() {
         }
     });
 
-    Command destroyProjectile, destroyEnemyAircraft;
-
-    destroyProjectile.category    = GameObjectCategory::Projectile;
-    destroyProjectile.action      = action;
-
-    destroyEnemyAircraft.category = GameObjectCategory::EnemyAircraft;
-    destroyEnemyAircraft.action   = action;
-
-    mGlobalCommandQueue.push(destroyProjectile);
-    mGlobalCommandQueue.push(destroyEnemyAircraft);
+    mGlobalCommandQueue.push(killObject);
 }
 
 void World::loadTextures() {
